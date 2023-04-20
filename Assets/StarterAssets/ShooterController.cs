@@ -8,7 +8,6 @@ public class ShooterController : MonoBehaviour
 {
     private StarterAssetsInputs starterAssetsInputs;
 
-    private LayerMask aimColliderLayerMask = new LayerMask();
 
     [Header("GameObject References")]
     [SerializeField] private GameObject gunAim;
