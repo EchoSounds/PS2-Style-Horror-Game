@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SwordAttack : MonoBehaviour
 {
+    public bool hasSword;
+    public bool swordEquiped;
+
     [Header("Sword Attack Stats")]
     public float attackDistance = 3f;
     public float attackDelay = 0.4f;
@@ -24,13 +27,33 @@ public class SwordAttack : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private Animator animator;
     [SerializeField] private PlayerMovement pm;
+    [SerializeField] private GameObject arms;
+
 
     private void Update()
     {
+        arms.SetActive(hasSword);
+        if (!hasSword) return;
+
+        if (Input.GetKeyDown(KeyCode.X))
+            toggleSword();
         if (Input.GetKeyDown(KeyCode.Mouse0))
             Attack();
 
+
         SetAnimations();
+    }
+
+    public void toggleSword()
+    {
+        if (swordEquiped)
+        {
+            swordEquiped = false;
+        }
+        else
+        {
+            swordEquiped = true;
+        }
     }
 
     public void Attack()
