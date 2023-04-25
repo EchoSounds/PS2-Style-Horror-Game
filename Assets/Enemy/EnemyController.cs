@@ -76,14 +76,14 @@ public class EnemyController : MonoBehaviour
             {
                 // Stop attacking and start walking
                 isAttacking = false;
-                animator.SetBool("isWalking", true);
+                //animator.SetBool("isWalking", true);
             }
         }
         else
         {
             // Stop walking and reset the attack timer
             isAttacking = false;
-            animator.SetBool("isWalking", false);
+            //animator.SetBool("isWalking", false);
             attackTimer = 0f;
             agent.SetDestination(target.position);
         }

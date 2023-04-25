@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 485217247338052961}
   - component: {fileID: 64268220725114130}
   - component: {fileID: 358143860535518650}
+  - component: {fileID: 6783803337531696681}
   m_Layer: 0
   m_Name: Barrel_Throwed
   m_TagString: Untagged
@@ -96,7 +97,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 7f05ad57ca4a24793b34ee312ac29d24, type: 3}
 --- !u!114 &358143860535518650
@@ -112,3 +113,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 10
+--- !u!54 &6783803337531696681
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 485217247335850913}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
