@@ -5,16 +5,18 @@ using UnityEngine;
 public class PickUpSword : MonoBehaviour
 {
     private bool playerInRange;
-    public SwordAttack sa;
+    public InventoryManager im;
 
     private void OnTriggerStay(Collider other)
     {
-        sa = other.GetComponent<SwordAttack>();
+        im = other.GetComponent<InventoryManager>();
 
         if (Input.GetKeyUp(KeyCode.E) || playerInRange)
         {
-            sa.hasSword = true;
+            im.hasSword = true;
             Destroy(this.gameObject);
         }
+
+
     }
 }

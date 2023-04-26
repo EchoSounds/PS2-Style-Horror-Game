@@ -41,6 +41,8 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 moveDirection;
 
+    private bool hasKey;
+
     Rigidbody rb;
 
     public MovementState state;
