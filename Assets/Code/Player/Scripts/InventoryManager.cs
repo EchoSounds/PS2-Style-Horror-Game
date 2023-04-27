@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
 
 public class InventoryManager : MonoBehaviour
 {
+    public bool interact;
+    public bool restart;
+
     public bool hasSword;
     public bool hasBow;
     public bool hasKey;
@@ -26,27 +30,45 @@ public class InventoryManager : MonoBehaviour
         sa = GetComponent<SwordAttack>();
     }
 
+    private void FixedUpdate()
+    {
+ 
+    }
+
     private void Update()
     {
-        float scrollDelta = Input.mouseScrollDelta.y;
-        if (scrollDelta > 0)
+        if (Input.GetKeyDown(KeyCode.E)) { interact = true; } else if (Input.GetKeyUp(KeyCode.E)) { interact = false; }
+        if (Input.GetKeyDown(KeyCode.Escape)) { restart = true; } else if (Input.GetKeyUp(KeyCode.Escape)) { restart = false; }
+
+        if (activeItem != null)
         {
-            currSlot++;
-            if (currSlot > items.Count-1)
-            {
-                currSlot = 0;
-            }
-            ActivateItem(items[currSlot]);
+            if (activeItem.iconLabel == "Key") { hasKey = true; } else if (activeItem.iconLabel != "Key") { hasKey = false; }
         }
-        else if (scrollDelta < 0)
+        
+
+        if (items.Count > 0)
         {
-            currSlot--;
-            if (currSlot < 0)
+            float scrollDelta = Input.mouseScrollDelta.y;
+            if (scrollDelta > 0)
             {
-                currSlot = items.Count-1;
+                currSlot++;
+                if (currSlot > items.Count - 1)
+                {
+                    currSlot = 0;
+                }
+                ActivateItem(items[currSlot]);
             }
-            ActivateItem(items[currSlot]);
+            else if (scrollDelta < 0)
+            {
+                currSlot--;
+                if (currSlot < 0)
+                {
+                    currSlot = items.Count - 1;
+                }
+                ActivateItem(items[currSlot]);
+            }
         }
+
     }
 
     public void PickUpItem(ItemInventory item)

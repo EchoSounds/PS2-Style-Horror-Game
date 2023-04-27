@@ -16,11 +16,13 @@ public class itemPickup : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if (playerInRange || Input.GetKeyDown(KeyCode.E))
+        if(playerInRange && im.interact)
         {
             if (ii == null) Debug.Log("no itemInventory set on " + gameObject.name);
             im.PickUpItem(ii);
             Destroy(this.gameObject);
         }
     }
+    private void OnTriggerEnter(Collider other) { playerInRange = true; }
+    private void OnTriggerExit(Collider other) { playerInRange = false; }
 }

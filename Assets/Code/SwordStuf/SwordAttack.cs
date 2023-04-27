@@ -74,6 +74,13 @@ public class SwordAttack : MonoBehaviour
 
             if (hit.transform.TryGetComponent<BreakableObject>(out BreakableObject T))
             { T.TakeDamage(attackDamage); }
+
+            Vector3 forceDirection = camTransform.forward;
+            forceDirection.Normalize();
+
+            hit.transform.TryGetComponent<Rigidbody>(out Rigidbody rb);
+            rb.AddForce(forceDirection * 10, ForceMode.Impulse);
+
         }
     }
 

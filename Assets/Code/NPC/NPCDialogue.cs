@@ -59,7 +59,7 @@ public class NPCDialogue : MonoBehaviour
 
         dialogueText.text = texts[dialogueProgression];
     }
- 
-    private void OnTriggerExit(Collider other) {  ToggleDialogueBox(); dialogueProgression = 0; }
-    private void OnTriggerEnter(Collider other) { ToggleDialogueBox(); }
+
+    private void OnTriggerEnter(Collider other) { ToggleDialogueBox(); Debug.Log("entered"); }
+    private void OnTriggerExit(Collider other) {  ToggleDialogueBox(); dialogueProgression = 0; Debug.Log("exit"); }
 }
