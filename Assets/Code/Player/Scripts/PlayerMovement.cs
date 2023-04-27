@@ -62,11 +62,13 @@ public class PlayerMovement : MonoBehaviour
 
         readyToJump = true;
 
+
         startYScale = transform.localScale.y;
     }
 
     private void Update()
     {
+        Cursor.visible = false;
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround))
         {

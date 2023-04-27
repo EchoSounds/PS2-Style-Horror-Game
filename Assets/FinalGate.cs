@@ -41,8 +41,8 @@ public class FinalGate : MonoBehaviour
     IEnumerator EndTimer()
     {
         yield return new WaitForSeconds(3);
-        Scene scene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(scene.name);
+        Application.OpenURL("https://forms.gle/XKkRxzntz2wExoza7");
+        SceneManager.LoadScene(2);
     }
 
 }

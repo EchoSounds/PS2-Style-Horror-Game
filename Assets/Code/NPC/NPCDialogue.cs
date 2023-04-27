@@ -5,7 +5,7 @@ using TMPro;
 
 public class NPCDialogue : MonoBehaviour
 {
-    private int dialogueProgression;
+    private int dialogueProgression = 1;
     [SerializeField] private List<string> texts = new List<string>();
     public Canvas dialogueCanvas;
     public TextMeshProUGUI dialogueText;
@@ -38,12 +38,14 @@ public class NPCDialogue : MonoBehaviour
         {
             dCactive = true;
             dialogueCanvas.gameObject.SetActive(true);
+            dialogueProgression = 1;
             SetDialogueText();
         }
         else
         {
             dCactive = false;
             dialogueCanvas.gameObject.SetActive(false);
+
         }
     }
 
@@ -53,8 +55,6 @@ public class NPCDialogue : MonoBehaviour
         {
             textFinished = true;
             dialogueProgression = 0;
-            dialogueText.text = "I wish you luck on your travels, are you confused on what your are meant to do???";
-            return;
         }
 
         dialogueText.text = texts[dialogueProgression];
