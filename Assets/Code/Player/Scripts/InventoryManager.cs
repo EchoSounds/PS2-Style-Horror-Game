@@ -12,7 +12,7 @@ public class InventoryManager : MonoBehaviour
     public bool hasBow;
     public bool hasKey;
 
-    private int currSlot;
+    [SerializeField]private int currSlot;
 
     public List<GameObject> hotBarItems;
     public List<ItemInventory> items = new List<ItemInventory>();
@@ -47,19 +47,17 @@ public class InventoryManager : MonoBehaviour
             }
             ActivateItem(items[currSlot]);
         }
-        Debug.Log(currSlot);
     }
 
     public void PickUpItem(ItemInventory item)
     {
         items.Add(item);
-        foreach(GameObject barItem in hotBarItems)
+        ActivateItem(item);
+        foreach (GameObject barItem in hotBarItems)
         {
             if(barItem.name == item.iconLabel)
             {
                 barItem.SetActive(true);
-                Debug.Log(barItem.name);
-                Debug.Log(item.iconLabel);
             }
 
             if(item.iconLabel == "Sword")
@@ -77,6 +75,7 @@ public class InventoryManager : MonoBehaviour
         DeactivateItem();
         // Active inventory item!
         if(item.iconLabel == "Sword") sa.enabled = true;
+        if (item.iconLabel == "Key") hasKey = true;
 
         activeItem = item;
         item.Activate();
@@ -87,6 +86,7 @@ public class InventoryManager : MonoBehaviour
         if (activeItem == null)
             return;
         sa.enabled = false;
+        hasKey = false;
         activeItem.Deactivate();
         activeItem = null;
     }
