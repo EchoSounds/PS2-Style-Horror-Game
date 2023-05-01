@@ -23,72 +23,57 @@ public class InventoryManager : MonoBehaviour
     private GUIContent _itemButtonContent = new GUIContent();
     private SwordAttack sa;
 
-    private void Start()
-    {
+    private void Start() {
         sa = GetComponent<SwordAttack>();
     }
 
-    private void FixedUpdate()
-    {
- 
-    }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E)) { interact = true; } else if (Input.GetKeyUp(KeyCode.E)) { interact = false; }
-        if (Input.GetKeyDown(KeyCode.Escape)) { restart = true; } else if (Input.GetKeyUp(KeyCode.Escape)) { restart = false; }
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.E)) { interact = true; } 
+            else if (Input.GetKeyUp(KeyCode.E)) { interact = false; }
+        if (Input.GetKeyDown(KeyCode.Escape)) { restart = true; } 
+            else if (Input.GetKeyUp(KeyCode.Escape)) { restart = false; }
 
-        if (activeItem != null)
-        {
-            if (activeItem.iconLabel == "Key") { hasKey = true; } else if (activeItem.iconLabel != "Key") { hasKey = false; }
+        if (activeItem != null) {
+            if (activeItem.iconLabel == "Key") { hasKey = true; } 
+                else if (activeItem.iconLabel != "Key") { hasKey = false; }
         }
-        
 
-        if (items.Count > 0)
-        {
+        if (items.Count > 0) {
             float scrollDelta = Input.mouseScrollDelta.y;
-            if (scrollDelta > 0)
-            {
+            if (scrollDelta > 0) {
                 currSlot++;
-                if (currSlot > items.Count - 1)
-                {
+                if (currSlot > items.Count - 1) {
                     currSlot = 0;
                 }
                 ActivateItem(items[currSlot]);
             }
-            else if (scrollDelta < 0)
-            {
+            else if (scrollDelta < 0) {
                 currSlot--;
-                if (currSlot < 0)
-                {
+                if (currSlot < 0){
                     currSlot = items.Count - 1;
                 }
                 ActivateItem(items[currSlot]);
             }
         }
-
     }
 
     public void PickUpItem(ItemInventory item)
     {
         items.Add(item);
         ActivateItem(item);
-        foreach (GameObject barItem in hotBarItems)
-        {
-            if(barItem.name == item.iconLabel)
-            {
+        foreach (GameObject barItem in hotBarItems) {
+            if(barItem.name == item.iconLabel) {
                 barItem.SetActive(true);
             }
 
-            if(item.iconLabel == "Sword")
-            {
+            if(item.iconLabel == "Sword") {
                 sa = GetComponent<SwordAttack>();
             }
         }
     }
 
-    public void ActivateItem(ItemInventory item)
-    {
+    public void ActivateItem(ItemInventory item) {
         // Don't bother, this item is already active!
         if (item == activeItem)
             return;
@@ -100,8 +85,7 @@ public class InventoryManager : MonoBehaviour
         activeItem = item;
         item.Activate();
     }
-    public void DeactivateItem()
-    {
+    public void DeactivateItem() {
         // No item is active, bail!
         if (activeItem == null)
             return;
