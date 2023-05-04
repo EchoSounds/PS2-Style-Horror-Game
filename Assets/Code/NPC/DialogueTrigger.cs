@@ -7,7 +7,7 @@ public class DialogueTrigger : MonoBehaviour
     public Dialogue dialogue;
 
     private void OnTriggerEnter(Collider other)
-    { FindObjectOfType<DialogueManager>().StartDialogue(dialogue); }
+    { if (other.CompareTag("Player")) FindObjectOfType<DialogueManager>().StartDialogue(dialogue); }
     private void OnTriggerExit(Collider other)
-    { FindObjectOfType<DialogueManager>().EndDialogue(); }
+    { if (other.CompareTag("Player")) FindObjectOfType<DialogueManager>().EndDialogue(); }
 }

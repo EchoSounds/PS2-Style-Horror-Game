@@ -6,7 +6,7 @@ public class SwordAttack : MonoBehaviour
 {
     [Header("Sword Attack Stats")]
     public float attackDistance = 3f;
-    public float attackDelay = 0.4f;
+    public float attackDelay = 0.2f;
     public float attackSpeed = 1f;
     public int attackDamage = 1;
     public LayerMask attackLayer;
@@ -120,10 +120,10 @@ public class SwordAttack : MonoBehaviour
         // If player is not attacking
         if (!attacking)
         {
-            if (pm.moveSpeed <= 0.2f)
-            { ChangeAnimationState(IDLE); }
-            else
+            if (pm.movement != Vector3.zero)
             { ChangeAnimationState(WALK); }
+            else
+            { ChangeAnimationState(IDLE); }
         }
     }
 }

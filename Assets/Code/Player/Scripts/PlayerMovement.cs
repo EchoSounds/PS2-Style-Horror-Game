@@ -6,214 +6,44 @@ using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Movement")]
-    public float moveSpeed;
-    public float walkSpeed;
-    public float sprintSpeed;
+    public float speed = 10f;
+    public float groundDrag = 6f;
+    private Rigidbody rb;
+    private Camera mainCamera;
 
-    public float groundDrag;
+    [HideInInspector] public Vector3 movement;
 
-    [Header("Jumping")]
-    public float jumpForce;
-    public float jumpCooldown;
-    public float airMultiplier;
-    bool readyToJump;
-
-    [Header("Crouching")]
-    public float crouchSpeed;
-    public float crouchYScale;
-    private float startYScale;
-
-    [Header("Keybinds")]
-    public KeyCode jumpKey = KeyCode.Space;
-    public KeyCode sprintKey = KeyCode.LeftShift;
-    public KeyCode crouchKey = KeyCode.LeftControl;
-
-    [Header("Ground Check")]
-    public float playerHeight;
-    public LayerMask whatIsGround;
-    [SerializeField]bool grounded;
-
-
-    public Transform orientation;
-
-    float horizontalInput;
-    float verticalInput;
-
-    Vector3 moveDirection;
-
-    private bool hasKey;
-
-    Rigidbody rb;
-
-    public MovementState state;
-    public enum MovementState
-    {
-        walking,
-        sprinting,
-        crouching,
-        air
-    }
-
-    private void Start()
+    void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
-
-        readyToJump = true;
-
-
-        startYScale = transform.localScale.y;
+        rb.freezeRotation = true; // prevent player from tilting when jumping
+        mainCamera = Camera.main;
     }
 
-    private void Update()
+    void FixedUpdate()
     {
-        Cursor.visible = false;
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround))
+        // Get the direction the camera is facing
+        Vector3 cameraForward = Vector3.Scale(mainCamera.transform.forward, new Vector3(1, 0, 1)).normalized;
+
+        // Calculate the movement direction based on the camera's facing direction
+        movement = cameraForward * Input.GetAxis("Vertical") + mainCamera.transform.right * Input.GetAxis("Horizontal");
+        movement = movement.normalized * speed;
+
+        // Apply the movement to the player's rigidbody using AddForce
+        rb.AddForce(movement, ForceMode.VelocityChange);
+
+        // Add ground drag to the player's movement
+        if (IsGrounded())
         {
-            grounded = true;
-        }
-        else
-        {
-            grounded = false;
-        }
-
-        // ground check
-        //grounded = Physics.Raycast(transform.position, Vector3.down, 1, whatIsGround);
-        //Debug.DrawRay(transform.position, Vector3.down, Color.red);
-
-        MyInput();
-        SpeedControl();
-        StateHandler();
-
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            Scene scene = SceneManager.GetActiveScene();
-            SceneManager.LoadScene(scene.name);
-        }
-
-        // handle drag
-        if (grounded)
-        {
-            rb.drag = groundDrag;
-
-            if (readyToJump == false)
-            {
-                Invoke(nameof(ResetJump), jumpCooldown);
-            }
-        }
-           
-
-        else
-            rb.drag = 0;
-    }
-
-    private void FixedUpdate()
-    {
-        MovePlayer();
-    }
-
-    private void MyInput()
-    {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
-
-        // when to jump
-        if (Input.GetKey(jumpKey) && readyToJump && grounded)
-        {
-            readyToJump = false;
-
-            Jump();
-        }
-
-        // start crouch
-        if (Input.GetKeyDown(crouchKey))
-        {
-            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-            orientation.localScale = new Vector3(transform.localScale.x, 2, transform.localScale.z);
-            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
-        }
-
-        // stop crouch
-        if (Input.GetKeyUp(crouchKey))
-        {
-            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
-            orientation.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
+            Vector3 groundVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            rb.AddForce(-groundVelocity * groundDrag, ForceMode.Acceleration);
         }
     }
 
-    private void StateHandler()
+    bool IsGrounded()
     {
-        // Mode - Crouching
-        if (Input.GetKey(crouchKey))
-        {
-            state = MovementState.crouching;
-            moveSpeed = crouchSpeed;
-        }
-
-        // Mode - Sprinting
-        else if (grounded && Input.GetKey(sprintKey))
-        {
-            state = MovementState.sprinting;
-            moveSpeed = sprintSpeed;
-        }
-
-        // Mode - Walking
-        else if (grounded)
-        {
-            state = MovementState.walking;
-            moveSpeed = walkSpeed;
-        }
-
-        // Mode - Air
-        else
-        {
-            state = MovementState.air;
-        }
-    }
-
-    private void MovePlayer()
-    {
-        // calculate movement direction
-        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-
-        // on ground
-        if (grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-
-        // in air
-        else if (!grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
-
-        // turn gravity off while on slope
-        rb.useGravity = true;
-    }
-
-    private void SpeedControl()
-    {
-        // limiting speed on ground or in air
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-        // limit velocity if needed
-        if (flatVel.magnitude > moveSpeed)
-        {
-            Vector3 limitedVel = flatVel.normalized * moveSpeed;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
-        }
-    }
-
-    private void Jump()
-    {
-        // reset y velocity
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-
-
-    }
-    private void ResetJump()
-    {
-        readyToJump = true;
+        // Check if the player is touching the ground using a raycast
+        float distanceToGround = GetComponent<Collider>().bounds.extents.y + 0.1f;
+        return Physics.Raycast(transform.position, -Vector3.up, distanceToGround);
     }
 }
