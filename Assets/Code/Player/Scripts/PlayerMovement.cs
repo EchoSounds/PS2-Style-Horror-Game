@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private Camera mainCamera;
 
-    [HideInInspector] public Vector3 movement;
+     public Vector3 movement;
 
     void Start()
     {
@@ -38,6 +38,10 @@ public class PlayerMovement : MonoBehaviour
             Vector3 groundVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
             rb.AddForce(-groundVelocity * groundDrag, ForceMode.Acceleration);
         }
+
+        //if(Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0){
+        //    rb.velocity = Vector3.zero;
+        //}
     }
 
     bool IsGrounded()
